@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CoinAnk 追涨提醒器</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="CoinAnk 追涨提醒器">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <span class="brand-kicker">CoinAnk × OKX</span>
+            <span class="brand-name">追涨提醒器</span>
+          </span>
+        </a>
+        <div class="data-status">
+          <span class="status-dot"></span>
+          <span id="dataStatus">Connecting CoinAnk API...</span>
+        </div>
+      </header>
+
+      <section class="hero-grid">
+        <article class="hero-copy">
+          <p class="eyebrow">CoinAnk API Challenge Demo</p>
+          <h1>追涨提醒器</h1>
+          <p class="lede">把资金费率、持仓量和清算压力，翻译成新手能听懂的入场风险。</p>
+          <div class="coin-switcher" role="tablist" aria-label="选择币种">
+            <button class="coin-button is-active" type="button" data-symbol="BTC" role="tab" aria-selected="true">BTC</button>
+            <button class="coin-button" type="button" data-symbol="ETH" role="tab" aria-selected="false">ETH</button>
+            <button class="coin-button" type="button" data-symbol="SOL" role="tab" aria-selected="false">SOL</button>
+          </div>
+        </article>
+
+        <article class="signal-card" aria-live="polite">
+          <div class="signal-top">
+            <div>
+              <p class="panel-label">当前判断</p>
+              <h2 id="coinTitle">BTC 不建议追涨</h2>
+            </div>
+            <span class="risk-pill" id="riskPill">高风险</span>
+          </div>
+
+          <div class="score-orbit" aria-label="追涨风险分数">
+            <svg viewBox="0 0 220 220" role="img" aria-label="风险分数仪表盘">
+              <circle class="track" cx="110" cy="110" r="88"></circle>
+              <circle class="progress" id="scoreRing" cx="110" cy="110" r="88"></circle>
+            </svg>
+            <div class="score-copy">
+              <strong id="riskScore">82</strong>
+              <span>追涨风险</span>
+            </div>
+          </div>
+
+          <p class="plain-advice" id="plainAdvice">现在追多容易买在拥挤区，先等市场降温。</p>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="insight-panel">
+          <div class="section-head">
+            <p class="panel-label">为什么这么判断</p>
+            <span id="riskMode">偏热区</span>
+          </div>
+          <ul class="reason-list" id="reasonList"></ul>
+        </article>
+
+        <article class="heat-panel">
+          <div class="section-head">
+            <p class="panel-label">市场温度</p>
+            <span id="heatLabel">过热</span>
+          </div>
+          <div class="heat-bars" id="heatBars" aria-label="市场温度柱状图"></div>
+        </article>
+      </section>
+
+      <section class="metric-grid" aria-label="核心指标">
+        <article class="metric">
+          <span>资金费率</span>
+          <strong id="fundingRate">0.083%</strong>
+          <p id="fundingText">偏高，说明追多情绪较强。</p>
+        </article>
+        <article class="metric">
+          <span>持仓量变化</span>
+          <strong id="oiChange">+12.4%</strong>
+          <p id="oiText">持仓快速增加，杠杆正在堆积。</p>
+        </article>
+        <article class="metric">
+          <span>清算压力</span>
+          <strong id="liquidationRisk">强</strong>
+          <p id="liquidationText">下方清算区较近，回落时容易连锁触发。</p>
+        </article>
+      </section>
+
+      <section class="one-line-panel">
+        <div>
+          <p class="panel-label">给新手的一句话</p>
+          <p class="one-line" id="oneLine">BTC 已经偏热，不要因为刚刚上涨就急着追。</p>
+        </div>
+        <div class="source-card">
+          <span>数据状态</span>
+          <strong id="sourceTitle">Live CoinAnk API</strong>
+          <p id="sourceDetail">正在读取实时价格、资金费率和持仓量。</p>
+          <button class="push-button" type="button" id="pushButton">发送提醒</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
