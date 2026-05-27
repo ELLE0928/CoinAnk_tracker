@@ -72,6 +72,7 @@ const fallbackData = {
 let currentSymbol = "BTC";
 const liveCache = {};
 const demoKey = new URLSearchParams(window.location.search).get("key") || "";
+const isLocalDemo = ["localhost", "127.0.0.1"].includes(window.location.hostname) || window.location.hostname.endsWith("trycloudflare.com");
 
 const buttons = document.querySelectorAll(".coin-button");
 const fields = {
@@ -208,7 +209,7 @@ async function loadMarket(symbol) {
     setStatus("Live CoinAnk API · 0 金额授权", true);
   } catch (error) {
     render({ ...fallbackData[symbol], symbol });
-    setStatus("本机代理未连接 · 使用模拟数据", false);
+    setStatus(isLocalDemo ? "本机代理未连接 · 使用模拟数据" : "静态演示 · 示例数据", false);
   }
 }
 
