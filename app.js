@@ -8,10 +8,12 @@ const fallbackData = {
     level: "高风险",
     title: "BTC 不建议追涨",
     advice: "现在追多容易买在拥挤区，先等市场降温。",
+    price: "$76,000",
     fundingRate: "0.083%",
     fundingText: "偏高，说明追多情绪较强。",
     oiChange: "+12.4%",
     oiText: "持仓快速增加，杠杆正在堆积。",
+    oiValue: "$7.6B",
     liquidationRisk: "强",
     liquidationText: "下方清算区较近，回落时容易连锁触发。",
     oneLine: "BTC 已经偏热，不要因为刚刚上涨就急着追。",
@@ -30,10 +32,12 @@ const fallbackData = {
     level: "中风险",
     title: "ETH 谨慎观察",
     advice: "可以继续看，但不要用高杠杆追进去。",
+    price: "$2,100",
     fundingRate: "0.041%",
     fundingText: "略高，市场有追多倾向。",
     oiChange: "+6.8%",
     oiText: "持仓温和增加，还没到极端拥挤。",
+    oiValue: "$4.5B",
     liquidationRisk: "中",
     liquidationText: "清算区不远，回调时波动会变大。",
     oneLine: "ETH 还没完全过热，但新手不要急着加杠杆。",
@@ -52,10 +56,12 @@ const fallbackData = {
     level: "低风险",
     title: "SOL 暂时不拥挤",
     advice: "当前追涨风险不高，但仍要等明确入场位。",
+    price: "$85.00",
     fundingRate: "0.012%",
     fundingText: "正常，没有明显追多拥挤。",
     oiChange: "-1.6%",
     oiText: "持仓没有增加，杠杆压力较小。",
+    oiValue: "$790M",
     liquidationRisk: "弱",
     liquidationText: "清算压力暂时不集中。",
     oneLine: "SOL 现在相对冷静，适合观察，不适合盲目冲动。",
@@ -85,10 +91,12 @@ const fields = {
   plainAdvice: document.querySelector("#plainAdvice"),
   reasonList: document.querySelector("#reasonList"),
   heatBars: document.querySelector("#heatBars"),
+  priceValue: document.querySelector("#priceValue"),
   fundingRate: document.querySelector("#fundingRate"),
   fundingText: document.querySelector("#fundingText"),
   oiChange: document.querySelector("#oiChange"),
   oiText: document.querySelector("#oiText"),
+  oiValue: document.querySelector("#oiValue"),
   liquidationRisk: document.querySelector("#liquidationRisk"),
   liquidationText: document.querySelector("#liquidationText"),
   oneLine: document.querySelector("#oneLine"),
@@ -134,10 +142,12 @@ function render(data) {
   fields.scoreRing.style.strokeDashoffset = String(ringLength - (ringLength * data.score) / 100);
   fields.riskScore.textContent = data.score;
   fields.plainAdvice.textContent = data.advice;
+  fields.priceValue.textContent = data.price || "暂无";
   fields.fundingRate.textContent = data.fundingRate;
   fields.fundingText.textContent = data.fundingText;
   fields.oiChange.textContent = data.oiChange;
   fields.oiText.textContent = data.oiText;
+  fields.oiValue.textContent = data.oiValue || "暂无";
   fields.liquidationRisk.textContent = data.liquidationRisk;
   fields.liquidationText.textContent = data.liquidationText;
   fields.oneLine.textContent = data.oneLine;
@@ -152,10 +162,11 @@ function render(data) {
   );
 
   renderBars(data.heatBars);
-  fields.sourceTitle.textContent = data.source?.includes("Live") ? "Live CoinAnk API" : "Mock Fallback";
-  fields.sourceDetail.textContent = data.updatedAt
+  const isLive = data.source?.includes("Live");
+  fields.sourceTitle.textContent = isLive ? "Live CoinAnk API" : (isLocalDemo ? "Demo Fallback" : "Static Demo");
+  fields.sourceDetail.textContent = isLive && data.updatedAt
     ? `已更新：${new Date(data.updatedAt).toLocaleString("zh-CN")}`
-    : "本机代理未启动时显示模拟数据。";
+    : (isLocalDemo ? "本机代理未启动时显示示例数据。" : "稳定网页预览；Live 链接会读取真实 CoinAnk API。");
 
   buttons.forEach((button) => {
     const isActive = button.dataset.symbol === data.symbol;
@@ -222,7 +233,7 @@ async function pushAlert() {
     const result = await requestJson(`/api/push?${params.toString()}`, { method: "POST" });
     fields.pushButton.textContent = result.success ? "已发送" : "发送失败";
   } catch {
-    fields.pushButton.textContent = "代理未连接";
+    fields.pushButton.textContent = isLocalDemo ? "代理未连接" : "静态页不可推送";
   } finally {
     setTimeout(() => {
       fields.pushButton.disabled = false;

@@ -231,6 +231,16 @@ function formatUsd(value) {
   }).format(value);
 }
 
+function formatCompactUsd(value) {
+  if (!Number.isFinite(value)) return "暂无";
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
 function formatPercent(value) {
   if (!Number.isFinite(value)) return "暂无";
   const percent = Math.abs(value) < 1 ? value * 100 : value;
@@ -277,7 +287,7 @@ function makeView(symbol, priceBody, fundingBody, oiBody) {
     liquidationRisk: high ? "强" : mid ? "中" : "弱",
     liquidationText: high ? "下方清算区较近，回落时容易连锁触发。" : "清算压力暂时不集中。",
     price: formatUsd(price),
-    oiValue: formatUsd(oiValue),
+    oiValue: formatCompactUsd(oiValue),
     oneLine: `${symbol} 当前追涨风险 ${score}/100，${high ? "不要因为上涨就急着追。" : mid ? "可以观察，但新手不要急着加杠杆。" : "市场相对冷静，适合继续观察。"}`,
     reasons: [
       `实时价格：${formatUsd(price)}，数据来自 CoinAnk 实时价格接口。`,
